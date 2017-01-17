@@ -24,5 +24,5 @@
 #import "MySocket.h"
 #import <SDAutoLayout.h>
 #import <SVProgressHUD.h>
-
+#import "DeviceModel.h"
 #endif /* Header_h */

@@ -8,34 +8,58 @@
 
 #import "DeviceShowViewController.h"
 #import "Header.h"
+#import "Request.h"
 @interface DeviceShowViewController ()<UITableViewDelegate,UITableViewDataSource>
 {
     UIImageView*bgImage;
     NSMutableArray*lightArr;
+    NSMutableArray*iconArr;
+    
 }
 @property(nonatomic,strong)UITableView*tab;
 @end
 
 @implementation DeviceShowViewController
+
+-(void)dealloc{
+    [[NSNotificationCenter defaultCenter]removeObserver:self];
+}
+
 -(void)viewWillAppear:(BOOL)animated{
     [super viewWillAppear:animated];
-    lightArr = [[NSMutableArray alloc]initWithCapacity:0];
-    NSString*name = [[NSUserDefaults standardUserDefaults] objectForKey:@"name"];
-    if (!name) {
-        bgImage.hidden = NO;
-        _tab.hidden = YES;
-    }else{
+    NSLog(@"----%@",NSHomeDirectory());
+    [lightArr removeAllObjects];
+   NSArray*arr = [NSKeyedUnarchiver unarchiveObjectWithFile:[NSHomeDirectory() stringByAppendingPathComponent:@"Documents/device.plist"]];
+    if (arr.count!=0) {
+        [lightArr addObjectsFromArray:arr];
         bgImage.hidden = YES;
         _tab.hidden = NO;
-        [lightArr addObject:@""];
-        
-    }
-    [_tab reloadData];
+        [_tab reloadData];
+    }else{
+            bgImage.hidden = NO;
+            _tab.hidden = YES;
+        }
     
+
+ 
+    
+}
+-(void)getDevice:(NSNotification*)notify{
+   NSInteger number = [[notify.userInfo objectForKey:@"tag"] integerValue];
+    if (number == 101) {
+        return;
+    }else{
+    DeviceModel*model = [notify.userInfo objectForKey:@"model"];
+    [lightArr addObject:model];
+        
+    [NSKeyedArchiver archiveRootObject:lightArr toFile:[NSHomeDirectory() stringByAppendingPathComponent:@"Documents/device.plist"]];
+    }
+     [_tab reloadData];
 }
 - (void)viewDidLoad {
     [super viewDidLoad];
-   
+    
+       lightArr = [[NSMutableArray alloc]initWithCapacity:0];
         bgImage = [[UIImageView alloc]init];
         bgImage.image = [UIImage imageNamed:@"bg"];
         [self.view addSubview:bgImage];
@@ -43,9 +67,12 @@
         .leftEqualToView(self.view)
         .rightEqualToView(self.view)
         .topSpaceToView(self.view,0)
-        .bottomSpaceToView(self.view,SCREENHEIGHT/11+10);
+        .bottomSpaceToView(self.view,SCREENHEIGHT/11);
   
         [self creatTableView];
+    
+       [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(getDevice:) name:@"device" object:nil];
+    
 }
 
 -(void)creatTableView{
@@ -60,9 +87,6 @@
         .topSpaceToView(self.view,0)
         .bottomSpaceToView(self.view,SCREENHEIGHT/11+10);
    
-    
-    
-
 }
 
 -(UITableViewCell*)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath{
@@ -75,10 +99,10 @@
         image.tag = 1;
         [cell addSubview:image];
         image.sd_layout
-        .leftSpaceToView(cell,30)
-        .topSpaceToView(cell,5)
-        .bottomSpaceToView(cell,5)
-        .widthIs(50);
+        .leftSpaceToView(cell,10)
+        .topSpaceToView(cell,10)
+        .bottomSpaceToView(cell,10)
+        .widthEqualToHeight();
         
         UILabel*lab = [[UILabel alloc]init];
         lab.tag = 2;
@@ -99,13 +123,13 @@
         .widthEqualToHeight();
         
     }
+    DeviceModel*model = [lightArr objectAtIndex:indexPath.row];
     
     UIImageView*img = [cell viewWithTag:1];
-    img.image = [UIImage imageNamed:@"pic1"];
+    img.image = [UIImage imageNamed:model.imageIcon];
     
     UILabel*lab = [cell viewWithTag:2];
-    lab.text = [[NSUserDefaults standardUserDefaults] objectForKey:@"name"];
-    
+    lab.text = model.deviceName;
     UIButton*button = [cell viewWithTag:3];
     [button addTarget:self action:@selector(buttonClick: ) forControlEvents:UIControlEventTouchUpInside];
     [button setImage:[UIImage imageNamed:@"close"] forState:UIControlStateNormal];
@@ -115,82 +139,61 @@
     return cell;
 }
 -(void)buttonClick:(UIButton*)button{
-    if (!button.selected) {
-        UIAlertController*alert = [UIAlertController alertControllerWithTitle:@"手动填写pin" message:nil preferredStyle:UIAlertControllerStyleAlert];
-        
-        [alert addTextFieldWithConfigurationHandler:^(UITextField * _Nonnull textField) {
-           
-        }];
-        [alert addTextFieldWithConfigurationHandler:^(UITextField * _Nonnull textField) {
+    
+    UITableViewCell*cell = (UITableViewCell*)[button superview];
+    NSIndexPath*path = [_tab indexPathForCell:cell];
+    DeviceModel*model = [lightArr objectAtIndex:path.row];
+
+    if ([model.imageIcon isEqualToString:@"device"]) {
+        //插座
+        if (button.selected) {
+            button.selected = NO;
+            [Request getResult:@"OFF1" ip:model.ipAdress completeWithData:^(BOOL isSuccess) {
+            }];
             
-        }];
-        
-        UIAlertAction*action = [UIAlertAction actionWithTitle:@"确定" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
             
-            UITextField *userPin = alert.textFields.firstObject;// 填写pin脚
-            UITextField *userIp = alert.textFields.lastObject;//填写IP
+        }else{
+            button.selected = YES;
+            //开关开启
+            [Request getResult:@"ON1" ip:model.ipAdress completeWithData:^(BOOL isSuccess) {
+            }];
             
-//------------------------socket通信----------------------------
-//            [[NSUserDefaults standardUserDefaults] setObject:userPin.text forKey:@"user"];
-//            [[NSUserDefaults standardUserDefaults] setObject:userIp.text forKey:@"userIp"];
-//            [[NSUserDefaults standardUserDefaults]synchronize];
-//            button.selected = YES;
-//            //开关打开 发送数据
-//            MySocket *socket = [MySocket sharedInstance];
-//            socket.socketPort = 53239;//端口号
-//            socket.pin = userPin.text ;
-//            socket.state = @"1";//开关打开
-//            socket.socketHost = userIp.text;//主机号
-//            [socket socketConnectHost];//连接
-//-----------------------webSever通信----------------------------
-            //发送post请求
-            
-        }];
-        [alert addAction:action];
-        
-        UIAlertAction*action1 = [UIAlertAction actionWithTitle:@"取消" style:UIAlertActionStyleCancel handler:nil];
-        [alert addAction:action1];
-        
-        [self presentViewController:alert animated:YES completion:nil];
+        }
     }else{
-        button.selected = NO;
-        //开关关闭 断开连接
-        
-//-------------------------socket通信----------------------------
-//        MySocket *socket = [MySocket sharedInstance];
-//        socket.socketPort = 53239;//端口号
-//        socket.pin = [[NSUserDefaults standardUserDefaults] objectForKey:@"user"];
-//        socket.state = @"0";//开关关闭
-//        socket.socketHost = [[NSUserDefaults standardUserDefaults] objectForKey:@"userIp"];;//主机号
-//        [socket socketConnectHost];//连接
-        
-        
-        
-//-----------------------webSever通信----------------------------
-        //发送post请求
+        //灯泡
+        if (button.selected) {
+            button.selected = NO;
+            [Request getResult:@"OFF2" ip:model.ipAdress completeWithData:^(BOOL isSuccess) {
+            }];
+           
+        }else{
+            button.selected = YES;
+            //开关开启
+            [Request getResult:@"ON2" ip:model.ipAdress completeWithData:^(BOOL isSuccess) {
+            }];
+            
+        }
+
     }
-    
-    
-   
     
 }
 -(void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath{
     [tableView deselectRowAtIndexPath:indexPath animated:YES];
-    [tableView setEditing:YES animated:YES];
+//    [tableView setEditing:YES animated:YES];
 }
--(void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath{
-    
-    //删除名字
-    [[NSUserDefaults standardUserDefaults]removeObjectForKey:@"name"];
-    //隐藏列表
-    _tab.hidden = YES;
-    //显示图片
-    bgImage.hidden = NO;
-    //刷新列表
-    [lightArr removeObjectAtIndex:0];
-    [tableView deleteRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationFade];
-    
-}
+//-(void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath{
+//    
+//    //删除名字
+//    [[NSUserDefaults standardUserDefaults]removeObjectForKey:@"name"];
+//    //隐藏列表
+//    _tab.hidden = YES;
+//    //显示图片
+//    bgImage.hidden = NO;
+//    //刷新列表
+//    [lightArr removeObjectAtIndex:0];
+//    [tableView deleteRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationFade];
+//    
+//}
 -(NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section{
     return lightArr.count;
 }

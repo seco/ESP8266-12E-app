@@ -21,6 +21,8 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
+    self.view.backgroundColor = [UIColor colorWithRed:242.0/255.0 green:242.0/255.0 blue:242.0/255.0 alpha:1];
+    
     titleAr = [[NSMutableArray alloc]initWithCapacity:0];
     imgArr = [[NSMutableArray alloc]initWithCapacity:0];
     [titleAr addObject:@"Good Morning"];
@@ -38,8 +40,8 @@
     image.image = [UIImage imageNamed:@"title"];
     [self.view addSubview:image];
     image.sd_layout
-    .leftSpaceToView(self.view,0)
-    .rightEqualToView(self.view)
+    .leftSpaceToView(self.view,15)
+    .rightSpaceToView(self.view,15)
     .heightIs(SCREENHEIGHT/7)
     .topSpaceToView(self.view,0);
 
@@ -58,8 +60,8 @@
         layout.itemSize = CGSizeMake((SCREENWIDTH-0.6)/2, (SCREENWIDTH-0.6)/2);
         layout. minimumInteritemSpacing = 0.2;
         layout.minimumLineSpacing = 0.2;
-        
-        collect = [[UICollectionView alloc]initWithFrame:CGRectMake(0.2,SCREENHEIGHT/7, SCREENWIDTH-0.4, (titleAr.count/2+1)*((SCREENWIDTH-0.6)/2)-SCREENHEIGHT/7-SCREENHEIGHT/11) collectionViewLayout:layout];
+        //(titleAr.count/2+1)*((SCREENWIDTH-0.6)/2)-SCREENHEIGHT/7-SCREENHEIGHT/11)
+        collect = [[UICollectionView alloc]initWithFrame:CGRectMake(0.2,SCREENHEIGHT/7, SCREENWIDTH-0.4,SCREENHEIGHT-SCREENHEIGHT/7-SCREENHEIGHT/11-64)  collectionViewLayout:layout];
         collect.scrollEnabled = NO;
         collect.backgroundColor = [UIColor whiteColor];
         

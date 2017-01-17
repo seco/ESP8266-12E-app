@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		9960E1C61E2E27FA00E368C0 /* DeviceModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 9960E1C51E2E27FA00E368C0 /* DeviceModel.m */; };
+		9960E1C91E2E284C00E368C0 /* Request.m in Sources */ = {isa = PBXBuildFile; fileRef = 9960E1C81E2E284C00E368C0 /* Request.m */; };
 		99B3EC761E2881F500F66148 /* SettingViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 99B3EC751E2881F500F66148 /* SettingViewController.m */; };
 		99B3EC7B1E2882B700F66148 /* chongzhi.png in Resources */ = {isa = PBXBuildFile; fileRef = 99B3EC771E2882B700F66148 /* chongzhi.png */; };
 		99B3EC7C1E2882B700F66148 /* img1.png in Resources */ = {isa = PBXBuildFile; fileRef = 99B3EC781E2882B700F66148 /* img1.png */; };
@@ -80,6 +82,10 @@
 		13A62AF7513D59D02103CEAD /* Pods-ChaZuo.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-ChaZuo.debug.xcconfig"; path = "Pods/Target Support Files/Pods-ChaZuo/Pods-ChaZuo.debug.xcconfig"; sourceTree = "<group>"; };
 		4EAED9D35E71B9C8ADDF3AE8 /* Pods-ChaZuo.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-ChaZuo.release.xcconfig"; path = "Pods/Target Support Files/Pods-ChaZuo/Pods-ChaZuo.release.xcconfig"; sourceTree = "<group>"; };
 		945663DCF7C771E9664836EC /* libPods-ChaZuo.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-ChaZuo.a"; sourceTree = BUILT_PRODUCTS_DIR; };
+		9960E1C41E2E27FA00E368C0 /* DeviceModel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DeviceModel.h; sourceTree = "<group>"; };
+		9960E1C51E2E27FA00E368C0 /* DeviceModel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DeviceModel.m; sourceTree = "<group>"; };
+		9960E1C71E2E284C00E368C0 /* Request.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Request.h; sourceTree = SOURCE_ROOT; };
+		9960E1C81E2E284C00E368C0 /* Request.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Request.m; sourceTree = SOURCE_ROOT; };
 		99B3EC741E2881F500F66148 /* SettingViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SettingViewController.h; path = DeviceGroup/SettingViewController.h; sourceTree = "<group>"; };
 		99B3EC751E2881F500F66148 /* SettingViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = SettingViewController.m; path = DeviceGroup/SettingViewController.m; sourceTree = "<group>"; };
 		99B3EC771E2882B700F66148 /* chongzhi.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = chongzhi.png; path = ChaZuo/Images/chongzhi.png; sourceTree = "<group>"; };
@@ -186,6 +192,15 @@
 			name = Frameworks;
 			sourceTree = "<group>";
 		};
+		9960E1C31E2E27FA00E368C0 /* Model */ = {
+			isa = PBXGroup;
+			children = (
+				9960E1C41E2E27FA00E368C0 /* DeviceModel.h */,
+				9960E1C51E2E27FA00E368C0 /* DeviceModel.m */,
+			);
+			path = Model;
+			sourceTree = "<group>";
+		};
 		99B3EC8B1E28BF7E00F66148 /* SocketTools */ = {
 			isa = PBXGroup;
 			children = (
@@ -231,6 +246,9 @@
 		99D8C7F21E270CAF002A4253 /* ChaZuo */ = {
 			isa = PBXGroup;
 			children = (
+				9960E1C71E2E284C00E368C0 /* Request.h */,
+				9960E1C81E2E284C00E368C0 /* Request.m */,
+				9960E1C31E2E27FA00E368C0 /* Model */,
 				99B3EC911E28BFFF00F66148 /* AsyncSocket */,
 				99B3EC8B1E28BF7E00F66148 /* SocketTools */,
 				99D8C8621E2755C0002A4253 /* ScenesGroup */,
@@ -546,9 +564,11 @@
 				99D8C85A1E2725B1002A4253 /* NextThreeViewController.m in Sources */,
 				99D8C88A1E27803E002A4253 /* ShowView.m in Sources */,
 				99B3EC971E28BFFF00F66148 /* AsyncUdpSocket.m in Sources */,
+				9960E1C91E2E284C00E368C0 /* Request.m in Sources */,
 				99D8C8571E2725A3002A4253 /* NextTwoViewController.m in Sources */,
 				99D8C8541E272588002A4253 /* NextOneViewController.m in Sources */,
 				99B3EC9A1E28C06C00F66148 /* MySocket.m in Sources */,
+				9960E1C61E2E27FA00E368C0 /* DeviceModel.m in Sources */,
 				99D8C8371E271DE0002A4253 /* DevicePresentViewController.m in Sources */,
 				99D8C8651E275622002A4253 /* SceneViewController.m in Sources */,
 				99D8C7F81E270CAF002A4253 /* AppDelegate.m in Sources */,

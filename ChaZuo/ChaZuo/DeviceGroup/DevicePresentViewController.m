@@ -62,9 +62,15 @@
 }
 -(void)buttonClick:(UIButton*)button{
     if (button.tag == 1) {
+        [[NSUserDefaults standardUserDefaults] setObject:@"device" forKey:@"iconName"];
+    }else{
+        [[NSUserDefaults standardUserDefaults] setObject:@"device1" forKey:@"iconName"];
+    }
+    [[NSUserDefaults standardUserDefaults] synchronize];
+    
         NextOneViewController*one = [[NextOneViewController alloc]init];
         [self.navigationController pushViewController:one animated:YES];
-    }
+   
 }
 -(void)leftBtnClick{
     [self dismissViewControllerAnimated:YES completion:nil];
